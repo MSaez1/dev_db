@@ -16,3 +16,7 @@ logging.basicConfig(
 )
 
 
+db = SQLAlchemy()
+migrate = Migrate()
+
+__all__ = ["db", "migrate"]

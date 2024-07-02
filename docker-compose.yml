@@ -1,4 +1,16 @@
 services:
+
+  flask-app:
+    build: .
+    ports:
+      - "5050:5050"
+    depends_on:
+      - db
+    environment:
+     DB_URL: "postgresql://test_deploy:test_deploy@db:5432/test_deploy"
+    networks:
+    - sync_sentry_app_network
+
   db:
     image: postgres:14.5
     environment:
@@ -7,29 +19,28 @@ services:
       POSTGRES_DB: test_deploy
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "test_deploy", "-U", "test_deploy"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sync_sentry_app_network
 
   adminer:
     image: adminer:latest
     ports:
       - "8080:8080"
+    networks:
+      - sync_sentry_app_network
 
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
+volumes:
+  shared:
 
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: admin
-    depends_on:
-      - prometheus
+networks:
 
-  node-exporter:
-    image: prom/node-exporter:latest
-    ports:
-      - "9100:9100"
+  sync_sentry_app_network:
+      name: sync_sentry_app_network
+      external: true
+
+

@@ -42,6 +42,8 @@ pydantic-settings = "*"
 flask-migrate = "*"
 flask-cors = "*"
 flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
