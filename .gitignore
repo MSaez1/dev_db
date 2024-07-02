@@ -1,0 +1,29 @@
+# Python virtual environment
+venv/
+
+# Editor-specific files
+.vscode/
+.idea/
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# Dependency directories
+lib/
+lib64/
+bin/
+include/
+share/
+
+# Miscellaneous
+*.swp
+.DS_Store
+
+.history
