@@ -27,3 +27,4 @@ share/
 .DS_Store
 
 .history
+deploy-test-db
