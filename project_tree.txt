@@ -22,6 +22,8 @@
 │   ├── templates
 │   │   ├── NOTES.txt
 │   │   ├── _helpers.tpl
+│   │   ├── adminer-deployment.yaml
+│   │   ├── configmap.yaml
 │   │   ├── deployment.yaml
 │   │   ├── hpa.yaml
 │   │   ├── ingress.yaml
@@ -32,7 +34,6 @@
 │   └── values.yaml
 ├── docker
 ├── docker-compose.yml
-├── init_extensions.py
 ├── manage.py
 ├── migrations
 │   ├── README
@@ -47,4 +48,4 @@
 ├── schemas.py
 └── seed.py
 
-9 directories, 38 files
+9 directories, 39 files

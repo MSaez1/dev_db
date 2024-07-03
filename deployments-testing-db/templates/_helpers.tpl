@@ -1,14 +1,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "deploy-test-db.name" -}}
+{{- define "deployments-testing-db.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "deploy-test-db.fullname" -}}
+{{- define "deployments-testing-db.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -20,29 +20,33 @@ Create a default fully qualified app name.
 {{/*
 Create chart labels.
 */}}
-{{- define "deploy-test-db.labels" -}}
-helm.sh/chart: {{ include "deploy-test-db.chart" . }}
-{{ include "deploy-test-db.selectorLabels" . }}
+{{- define "deployments-testing-db.labels" -}}
+helm.sh/chart: {{ include "deployments-testing-db.chart" . }}
+{{ include "deployments-testing-db.selectorLabels" . }}
 {{- with .Chart.AppVersion }}
 app.kubernetes.io/version: {{ . | quote }}
 {{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/name: {{ include "deployments-testing-db.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
 Create chart selector labels.
 */}}
-{{- define "deploy-test-db.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "deploy-test-db.name" . }}
+{{- define "deployments-testing-db.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "deployments-testing-db.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Create chart information.
 */}}
-{{- define "deploy-test-db.chart" -}}
+{{- define "deployments-testing-db.chart" -}}
 {{- if .Chart.Name -}}
-{{ .Chart.Name }}-{{ .Chart.Version }}
+{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 {{- else -}}
 {{ .Chart.Version }}
 {{- end -}}
@@ -51,9 +55,9 @@ Create chart information.
 {{/*
 Generate the name of the service account to use
 */}}
-{{- define "deploy-test-db.serviceAccountName" -}}
+{{- define "deployments-testing-db.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-{{- default (include "deploy-test-db.fullname" .) .Values.serviceAccount.name -}}
+{{- default (include "deployments-testing-db.fullname" .) .Values.serviceAccount.name -}}
 {{- else -}}
 {{- default "default" .Values.serviceAccount.name -}}
 {{- end -}}

@@ -1,30 +1,33 @@
 replicaCount: 1
 
 image:
-  repository: deploy-test-db
-  tag: latest
-  pullPolicy: Never
+  repository: "deploy-test-db"
+  name: "deploy-test-db"
+  tag: "latest"
+  pullPolicy: "Never"
 
 service:
-  type: ClusterIP
+  type: "ClusterIP"
   port: 5050
 
 db:
-  image: postgres
+  image: "postgres"
   tag: "14.5"
-  username: test_deploy
-  password: test_deploy
-  database: test_deploy
+  username: "test_deploy"
+  password: "test_deploy"
+  database: "test_deploy"
   port: 5432
-  pullPolicy: IfNotPresent
+  pullPolicy: "IfNotPresent"
+  nodePort: 30043
 
 adminer:
-  image: adminer
-  tag: latest
+  name: "adminer"
+  image: "adminer"
+  tag: "latest"
   port: 8080
-  pullPolicy: IfNotPresent
+  pullPolicy: "IfNotPresent"
 
-networkName: sync_sentry_app_network
+networkName: "deployment-testing-network"
 
 autoscaling:
   enabled: false
@@ -72,3 +75,4 @@ ingress:
     pathType: ImplementationSpecific
   tls: []
   annotations: {}
+serviceAccountName: ""

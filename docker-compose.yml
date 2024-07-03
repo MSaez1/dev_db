@@ -1,6 +1,6 @@
 services:
 
-  flask-app:
+  deployments-testing-app:
     build: .
     ports:
       - "5050:5050"
@@ -9,7 +9,7 @@ services:
     environment:
      DB_URL: "postgresql://test_deploy:test_deploy@db:5432/test_deploy"
     networks:
-    - sync_sentry_app_network
+    - app_network
 
   db:
     image: postgres:14.5
@@ -25,22 +25,22 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - sync_sentry_app_network
+      - app_network
 
   adminer:
     image: adminer:latest
     ports:
       - "8080:8080"
     networks:
-      - sync_sentry_app_network
+      - app_network
 
 volumes:
   shared:
 
 networks:
 
-  sync_sentry_app_network:
-      name: sync_sentry_app_network
-      external: true
+  app_network:
+      name: app_network
+      driver: bridge
 
 

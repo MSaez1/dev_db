@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "deployments-testing-db.fullname" . }}
+  labels:
+    {{- include "deployments-testing-db.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: "deployments-testing-db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    {{- include "deployments-testing-db.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.db.port }}
+      targetPort: {{ .Values.db.port }}
+      protocol: TCP
+      nodePort: {{ .Values.db.nodePort }}
+  selector:
+    app: "db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer
+  labels:
+    {{- include "deployments-testing-db.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.adminer.port }}
+      targetPort: 8080
+      protocol: TCP
+      nodePort: 30001  # Select a port between 30000-32767
+  selector:
+    app: "adminer"

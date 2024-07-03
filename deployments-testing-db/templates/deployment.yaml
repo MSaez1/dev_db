@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "deployments-testing-db.fullname" . }}
+  labels:
+    {{- include "deployments-testing-db.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: "deployments-testing-db"
+  template:
+    metadata:
+      labels:
+        app: "deployments-testing-db"
+    spec:
+      containers:
+        - name: deployments-testing-db
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          ports:
+            - containerPort: 5050
+          env:
+            - name: DB_URL
+              value: "postgresql://{{ .Values.db.username }}:{{ .Values.db.password }}@db:{{ .Values.db.port }}/{{ .Values.db.database }}"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5050
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 5050
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    app: "db"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "db"
+  template:
+    metadata:
+      labels:
+        app: "db"
+    spec:
+      containers:
+        - name: db
+          image: "{{ .Values.db.image }}:{{ .Values.db.tag }}"
+          imagePullPolicy: {{ .Values.db.pullPolicy | quote }}
+          ports:
+            - containerPort: {{ .Values.db.port }}
+          env:
+            - name: POSTGRES_USER
+              value: "{{ .Values.db.username }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.db.password }}"
+            - name: POSTGRES_DB
+              value: "{{ .Values.db.database }}"
+          readinessProbe:
+            exec:
+              command:
+                - "pg_isready"
+                - "-q"
+                - "-d"
+                - "{{ .Values.db.database }}"
+                - "-U"
+                - "{{ .Values.db.username }}"
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+  labels:
+    app: "adminer"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "adminer"
+  template:
+    metadata:
+      labels:
+        app: "adminer"
+    spec:
+      containers:
+        - name: adminer
+          image: "{{ .Values.adminer.image }}:{{ .Values.adminer.tag }}"
+          imagePullPolicy: {{ .Values.adminer.pullPolicy | quote }}
+          ports:
+            - containerPort: 8080
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
