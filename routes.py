@@ -42,7 +42,7 @@ def get_roles():
     roles = UserRoles.query.all()
     return roles_schema.jsonify(roles)
 
-@bp.route("/helthz")
+@bp.route("/healthz")
 def healthz():
     return jsonify(status='healthy'), 200
 

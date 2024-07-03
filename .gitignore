@@ -1,5 +1,6 @@
 # Python virtual environment
 venv/
+deploy-test-db/
 
 # Editor-specific files
 .vscode/
@@ -27,4 +28,3 @@ share/
 .DS_Store
 
 .history
-deploy-test-db

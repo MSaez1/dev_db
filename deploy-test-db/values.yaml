@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: deploy-test-db
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Never
 
 service:
   type: ClusterIP
@@ -16,11 +16,13 @@ db:
   password: test_deploy
   database: test_deploy
   port: 5432
+  pullPolicy: IfNotPresent
 
 adminer:
   image: adminer
   tag: latest
   port: 8080
+  pullPolicy: IfNotPresent
 
 networkName: sync_sentry_app_network
 
