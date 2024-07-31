@@ -2,7 +2,6 @@ replicaCount: 1
 
 image:
   repository: "deploy-test-db"
-  name: "deploy-test-db"
   tag: "latest"
   pullPolicy: "Never"
 
@@ -26,6 +25,21 @@ adminer:
   tag: "latest"
   port: 8080
   pullPolicy: "IfNotPresent"
+  nodePort: 30080
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+redis:
+  name: "redis"
+  image: "redis"
+  tag: "7.0.0"
+  port: 6379
+  pullPolicy: "IfNotPresent"
+  nodePort: 30079
 
 networkName: "deployment-testing-network"
 

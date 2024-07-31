@@ -35,13 +35,32 @@ kind: Service
 metadata:
   name: adminer
   labels:
+    app: {{ include "deployments-testing-db.fullname" . }}
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      nodePort: {{ .Values.adminer.nodePort }}
+  selector:
+    app: "adminer"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels:
     {{- include "deployments-testing-db.labels" . | nindent 4 }}
 spec:
   type: NodePort
   ports:
-    - port: {{ .Values.adminer.port }}
-      targetPort: 8080
+    - port: {{ .Values.redis.port }}
+      targetPort: {{ .Values.redis.port }}
       protocol: TCP
-      nodePort: 30001  # Select a port between 30000-32767
+      nodePort: 30002  # Select a port between 30000-32767
   selector:
-    app: "adminer"
+    app: "redis"
+
+

@@ -1,0 +1,25 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: db-pdb
+  labels:
+    app: "db"
+spec:
+    minAvailable: 1
+    selector:
+        matchLabels:
+        app: "db"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: redis-pdb
+  labels:
+    app: "redis"
+spec:
+    minAvailable: 1
+    selector:
+        matchLabels:
+        app: "redis"
+
+
